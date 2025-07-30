@@ -245,6 +245,7 @@ python src/production_strategy_complete.py
 ## Additional Documentation
 
 - **Strategy Details**: See `docs/PRODUCTION_STRATEGY_COMPLETE.md`
+- **Configuration Flow**: See `docs/CONFIGURATION_FLOW.md`
 - **Real Trading Setup**: See `docs/OPEND_REAL_TRADING.md`
 - **Scheduling/Automation**: See `docs/SCHEDULING.md`
 - **Testing Checklist**: See `docs/TEST_CHECKLIST.md`
