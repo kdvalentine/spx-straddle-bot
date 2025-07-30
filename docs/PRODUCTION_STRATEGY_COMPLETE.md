@@ -4,6 +4,21 @@
 
 This document describes the complete production-ready SPX straddle trading bot that incorporates all safety and optimization phases (1-4). The bot is designed for reliable, automated trading with comprehensive risk management and monitoring.
 
+## Trading Strategy
+
+### 0DTE (Zero Days to Expiration) Straddles
+- **Entry**: Buy ATM call and put options expiring same day
+- **Exit**: Hold until market close (no stop loss needed)
+- **Rationale**: 0DTE options expire worthless at end of day if not profitable
+- **Risk**: Limited to premium paid (positions cannot lose more than initial cost)
+- **Profit**: Captures large intraday moves in either direction
+
+### Why No Stop Loss?
+- 0DTE options have maximum loss built-in (the premium paid)
+- Options expire at 4:00 PM ET automatically
+- Stop losses can trigger on normal volatility, missing potential profitable moves
+- The strategy profits from significant moves in either direction
+
 ## Architecture
 
 ### Core Components

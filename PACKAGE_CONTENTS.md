@@ -31,6 +31,7 @@ This repository contains a complete, production-ready SPX options straddle tradi
 ✅ Comprehensive error handling
 ✅ Market hours and holiday validation
 ✅ Smart order execution with spread validation
+✅ 0DTE strategy - no stop loss needed (positions expire at end of day)
 
 ### Repository Status
 - All critical bugs fixed

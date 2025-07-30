@@ -20,8 +20,6 @@ class LocalConfig:
         # Basic settings
         self.aws_region = os.getenv('AWS_REGION', 'us-east-1')
         self.table_name = os.getenv('DYNAMODB_TABLE', 'spx-straddle-trades')
-        self.tp_sl_enabled = os.getenv('TP_SL', 'true').lower() == 'true'
-        self.tp_sl_threshold = float(os.getenv('TP_SL_THRESHOLD', '0.30'))
         
         # Trading environment - use paper trading for testing
         self.trading_env = os.getenv('TRADING_ENV', 'PAPER').upper()  # PAPER or REAL

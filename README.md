@@ -186,8 +186,7 @@ python src/production_strategy_complete.py
 
 ### Trading Parameters
 - `EXECUTION_TIME`: When to run the bot (default: 15:45:00 = 3:45 PM)
-- `TP_SL`: Enable take-profit/stop-loss (default: true)
-- `TP_SL_THRESHOLD`: TP/SL threshold percentage (default: 0.30 = 30%)
+- **Note**: 0DTE options expire at end of day - no stop loss needed
 
 ## Safety Features
 
