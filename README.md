@@ -104,6 +104,24 @@ nano .env
 
 ## Getting Your Moomoo Account IDs
 
+### Method 1: Automatic Discovery (Recommended)
+After installing dependencies and starting OpenD:
+
+```bash
+# Make sure virtual environment is activated
+source venv/bin/activate
+
+# Run the account discovery tool
+python scripts/get_account_info.py
+```
+
+This will:
+- Connect to OpenD and find all your accounts
+- Show account IDs for both paper and real accounts
+- Display current balances
+- Provide clear instructions on which ID to use
+
+### Method 2: Manual (from Moomoo App)
 1. Open the moomoo desktop app
 2. Go to Account > Account Management
 3. You'll see your account numbers:
