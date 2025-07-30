@@ -1,0 +1,18 @@
+# SPX Straddle Bot Requirements
+# Python 3.8+ required
+
+# Core trading dependencies
+futu-api>=7.8.0     # Moomoo API (latest stable version)
+yfinance>=0.2.28    # Backup SPX price data source
+pandas>=2.0.0       # Data manipulation
+numpy>=1.24.0       # Numerical computations
+
+# Time and date handling
+pytz>=2023.3        # Timezone support for market hours
+python-dateutil>=2.8.2  # Date utilities
+
+# Environment configuration
+python-dotenv>=1.0.0    # Load .env file
+
+# Logging (optional but recommended)
+colorlog>=6.7.0     # Colored console output
