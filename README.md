@@ -180,8 +180,8 @@ python src/production_strategy_complete.py
 ## Configuration Options
 
 ### Risk Management (.env file)
-- `MAX_RISK_PCT`: Maximum percentage of account to risk per trade (default: 0.02 = 2%)
-- `MAX_SPREAD_PCT`: Maximum acceptable bid-ask spread (default: 20%)
+- `MAX_RISK_PCT`: Maximum percentage of account to risk per trade (default: 0.15 = 15%)
+- `MAX_SPREAD_PCT`: Maximum acceptable bid-ask spread (default: 30%)
 - `ORDER_TIMEOUT_S`: Seconds to wait for order fills (default: 30)
 
 ### Trading Parameters

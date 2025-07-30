@@ -71,7 +71,7 @@ def wait_for_fill(self, order_id, timeout=30):
 ```
 
 #### 2.2 Position Sizing
-- Risk-based sizing (default 2% of account per trade)
+- Risk-based sizing (default 15% of account per trade, allows ~3 positions)
 - Considers both risk limit and buying power
 - Minimum 1 contract if affordable
 - Formula: `min(risk_contracts, buying_power_contracts)`
@@ -143,8 +143,8 @@ MOOMOO_HOST=127.0.0.1
 MOOMOO_PORT=11111
 
 # Risk Management
-MAX_RISK_PCT=0.02  # 2% of account per trade
-MAX_SPREAD_PCT=20  # Maximum acceptable bid-ask spread
+MAX_RISK_PCT=0.15  # 15% of account per trade (allows ~3 positions)
+MAX_SPREAD_PCT=30  # Maximum acceptable bid-ask spread (SPX options can have wider spreads)
 
 # Order Management
 ORDER_TIMEOUT_S=30
@@ -184,7 +184,7 @@ python production_strategy_complete.py --check-only
    - Select best combination of ATM + liquidity
 
 4. **Position Sizing**
-   - Calculate max risk (2% of account)
+   - Calculate max risk (15% of account)
    - Check buying power
    - Determine optimal contract count
 
@@ -203,7 +203,7 @@ python production_strategy_complete.py --check-only
 ## Risk Management
 
 ### Account Limits
-- Maximum 2% of account value per trade
+- Maximum 15% of account value per trade (allows ~3 positions)
 - Buying power validation
 - Minimum position size checks
 

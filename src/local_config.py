@@ -46,11 +46,11 @@ class LocalConfig:
         # Position sizing configuration
         # Note: initial_capital is deprecated - bot queries real balance from account
         self.initial_capital = None  # Will be set from actual account balance
-        self.max_risk_per_trade = float(os.getenv('MAX_RISK_PER_TRADE', '0.02'))
+        self.max_risk_per_trade = float(os.getenv('MAX_RISK_PER_TRADE', '0.15'))
         
         # Additional risk management settings for production_strategy_complete
-        self.max_risk_pct = float(os.getenv('MAX_RISK_PCT', '0.02'))
-        self.max_spread_pct = float(os.getenv('MAX_SPREAD_PCT', '20'))
+        self.max_risk_pct = float(os.getenv('MAX_RISK_PCT', '0.15'))
+        self.max_spread_pct = float(os.getenv('MAX_SPREAD_PCT', '30'))
         self.max_contracts = int(os.getenv('MAX_CONTRACTS', '10'))
         self.order_timeout_s = int(os.getenv('ORDER_TIMEOUT_S', '30'))
         self.price_buffer_pct = float(os.getenv('PRICE_BUFFER_PCT', '2.0'))

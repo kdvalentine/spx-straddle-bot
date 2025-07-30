@@ -61,8 +61,8 @@ MARKET_OPEN = datetime_time(9, 30)
 MARKET_CLOSE = datetime_time(16, 0)
 
 # Trading constants (configurable via config)
-DEFAULT_MAX_RISK_PCT = 0.02  # 2% of account per trade
-DEFAULT_MAX_SPREAD_PCT = 20.0  # Max bid-ask spread
+DEFAULT_MAX_RISK_PCT = 0.15  # 15% of account per trade (allows ~3 positions)
+DEFAULT_MAX_SPREAD_PCT = 30.0  # Max bid-ask spread (SPX options can have wider spreads)
 DEFAULT_ORDER_TIMEOUT_S = 30  # Order fill timeout
 DEFAULT_FILL_CHECK_INTERVAL_S = 1.0
 DEFAULT_CONNECTION_RETRIES = 3
