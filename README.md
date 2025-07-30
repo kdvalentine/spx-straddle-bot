@@ -243,9 +243,14 @@ python src/production_strategy_complete.py
 5. **Keep OpenD updated to latest version**
 6. **Review logs regularly**
 
-## Support
+## Additional Documentation
 
-For detailed strategy documentation, see `docs/PRODUCTION_STRATEGY_COMPLETE.md`
+- **Strategy Details**: See `docs/PRODUCTION_STRATEGY_COMPLETE.md`
+- **Real Trading Setup**: See `docs/OPEND_REAL_TRADING.md`
+- **Scheduling/Automation**: See `docs/SCHEDULING.md`
+- **Testing Checklist**: See `docs/TEST_CHECKLIST.md`
+
+## Support
 
 ## Disclaimer
 
