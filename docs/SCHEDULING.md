@@ -17,21 +17,51 @@ crontab -e
 ```
 
 ### 2. Add cron job
+
+**IMPORTANT**: Cron uses the system timezone. If your server is not in ET, adjust the hour accordingly.
+
 ```bash
 # Run SPX straddle bot at 3:45 PM ET every weekday
+# This example assumes system is in ET timezone
 45 15 * * 1-5 cd /path/to/spx-straddle-bot && /path/to/spx-straddle-bot/venv/bin/python src/production_strategy_complete.py >> logs/cron.log 2>&1
 ```
 
-### 3. Important considerations
-- Use full paths (not ~)
-- Ensure OpenD is running before scheduled time
-- Check timezone settings: `timedatectl` (Linux) or `date` (macOS)
-- The bot handles market hours/holidays internally
+**Time zone conversion examples:**
+- 3:45 PM ET = 15:45 ET
+- 3:45 PM ET = 12:45 PM PT (PST/PDT)
+- 3:45 PM ET = 20:45 UTC (during EST)
+- 3:45 PM ET = 19:45 UTC (during EDT)
 
-### Example with environment activation
+### 3. Complete working example
+
+Replace `/home/youruser/spx-straddle-bot` with your actual path:
+
 ```bash
-45 15 * * 1-5 cd /home/user/spx-straddle-bot && source venv/bin/activate && python src/production_strategy_complete.py >> logs/cron.log 2>&1
+# For ET timezone system
+45 15 * * 1-5 cd /home/youruser/spx-straddle-bot && source venv/bin/activate && python src/production_strategy_complete.py >> logs/cron.log 2>&1
+
+# For PT timezone system (12:45 PM PT = 3:45 PM ET)
+45 12 * * 1-5 cd /home/youruser/spx-straddle-bot && source venv/bin/activate && python src/production_strategy_complete.py >> logs/cron.log 2>&1
+
+# For UTC system (20:45 UTC = 3:45 PM ET during winter)
+45 20 * * 1-5 cd /home/youruser/spx-straddle-bot && source venv/bin/activate && python src/production_strategy_complete.py >> logs/cron.log 2>&1
 ```
+
+### 4. Verify your timezone
+```bash
+# Check system timezone
+timedatectl | grep "Time zone"  # Linux
+date +%Z                         # macOS/Linux
+
+# The bot internally uses ET for market hours checking
+```
+
+### 5. Important considerations
+- Use absolute paths (not ~ or relative paths)
+- Ensure OpenD is running before scheduled time
+- The bot handles market hours/holidays internally
+- Cron doesn't load your .bashrc/.profile - paths must be explicit
+- The .env file MUST be in the bot directory (cron runs from there with `cd`)
 
 ## Windows - Using Task Scheduler
 
@@ -156,11 +186,43 @@ Load with: `launchctl load ~/Library/LaunchAgents/com.moomoo.opend.plist`
 
 ## Testing Your Schedule
 
-1. Set a test schedule 5 minutes in the future
-2. Use --check-only flag for testing
-3. Verify logs are created
-4. Check account wasn't charged (for --check-only)
-5. Set production schedule
+### Quick Test (Recommended)
+First, test with a schedule 5 minutes in the future:
+
+```bash
+# Get current time
+date
+
+# Add test cron job (if it's 2:30 PM, set for 2:35 PM)
+crontab -e
+# Add: 35 14 * * * cd /home/youruser/spx-straddle-bot && source venv/bin/activate && python src/production_strategy_complete.py --check-only >> logs/test.log 2>&1
+
+# Wait 5 minutes, then check
+tail -f logs/test.log
+
+# Remove test entry after verification
+crontab -e
+```
+
+### Verify the schedule worked:
+1. ✅ Log file created with timestamp
+2. ✅ Shows "Market Status Check" output
+3. ✅ No errors about missing paths or modules
+4. ✅ Account balance displayed (no trades with --check-only)
+
+### Common Issues:
+- **No output**: Check path is absolute, not relative
+- **Module not found**: Virtual environment not activated
+- **Permission denied**: Make sure user owns the directories
+- **OpenD connection failed**: OpenD not running
+
+### Set Production Schedule
+Once test passes, update cron with real schedule (3:45 PM ET):
+```bash
+crontab -e
+# Add production job without --check-only flag
+45 15 * * 1-5 cd /home/youruser/spx-straddle-bot && source venv/bin/activate && python src/production_strategy_complete.py >> logs/production.log 2>&1
+```
 
 ## Important Notes
 
