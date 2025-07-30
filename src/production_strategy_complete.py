@@ -20,7 +20,7 @@ import time
 import pytz
 import pandas as pd
 import numpy as np
-from moomoo import *
+from futu import *
 
 # Load environment variables
 from dotenv import load_dotenv
@@ -191,6 +191,15 @@ class ProductionSPXBot:
                 if ret != RET_OK:
                     raise ConnectionError(f"Quote context test failed: {state}")
                 
+                # Unlock trade if using real account
+                if self.trading_env == TrdEnv.REAL:
+                    trade_pwd = config.get('trade_pwd', os.getenv('MOOMOO_TRADE_PWD'))
+                    if trade_pwd:
+                        logger.info("Unlocking trade for real account access...")
+                        ret, unlock_msg = self.trd_ctx.unlock_trade(trade_pwd)
+                        if ret != RET_OK:
+                            logger.warning(f"Trade unlock failed: {unlock_msg}")
+                
                 # Get account
                 self._setup_account()
                 
@@ -200,33 +209,59 @@ class ProductionSPXBot:
             except Exception as e:
                 logger.error(f"Connection attempt {attempt + 1} failed: {e}")
                 if attempt < self.connection_retries - 1:
-                    time_module.sleep(5)
+                    time.sleep(5)
                 else:
                     raise RuntimeError(f"Failed to connect after {self.connection_retries} attempts")
     
     def _setup_account(self):
         """Setup trading account"""
+        # Always get account list to ensure we have valid accounts
         ret, acct_list = self.trd_ctx.get_acc_list()
         if ret != RET_OK:
             raise RuntimeError(f"Failed to get account list: {acct_list}")
         
         # Find appropriate account
         target_env_str = "REAL" if self.trading_env == TrdEnv.REAL else "SIMULATE"
+        preferred_account_id = None
         
+        # For REAL trading, get preferred account from config
+        if self.trading_env == TrdEnv.REAL:
+            preferred_account_id = (config.get('account_id') or 
+                                  config.get('moomoo_account_id') or
+                                  config.get('moomoo_real_account_cash') or
+                                  os.getenv('MOOMOO_ACCOUNT_ID'))
+        
+        # Find account from list
         for acc in acct_list.itertuples():
-            if acc.trd_env == self.trading_env and 'CASH' in str(acc.acc_type):
-                self.account_id = acc.acc_id
-                logger.info(f"Using {target_env_str} account: {acc.acc_id}")
-                
-                # Get account info
-                self._refresh_account_info()
-                break
+            if acc.trd_env == self.trading_env:
+                # If we have a preferred ID, try to match it
+                if preferred_account_id and str(acc.acc_id) == str(preferred_account_id):
+                    self.account_id = acc.acc_id
+                    logger.info(f"Using preferred {target_env_str} account: {acc.acc_id} (Type: {acc.acc_type})")
+                    break
+                # Otherwise use first matching account
+                elif not self.account_id:
+                    self.account_id = acc.acc_id
+                    logger.info(f"Using {target_env_str} account: {acc.acc_id} (Type: {acc.acc_type})")
         
         if not self.account_id:
-            raise RuntimeError(f"No {target_env_str} CASH account found")
+            raise RuntimeError(f"No {target_env_str} account found")
+        
+        # Get account info
+        try:
+            self._refresh_account_info()
+        except Exception as e:
+            logger.warning(f"Could not refresh account info: {e}")
+            # Set defaults
+            self.available_cash = 0.0
+            self.buying_power = 0.0
+            self.account_value = 0.0
     
     def _refresh_account_info(self):
         """Refresh account balance and buying power"""
+        # Set the account ID on the context first
+        self.trd_ctx.acc_id = self.account_id
+        
         ret, info = self.trd_ctx.accinfo_query(
             trd_env=self.trading_env,
             acc_id=self.account_id,
@@ -235,13 +270,30 @@ class ProductionSPXBot:
         
         if ret == RET_OK and len(info) > 0:
             acc_info = info.iloc[0]
-            self.available_cash = float(acc_info.get('us_cash', 0))
-            self.buying_power = float(
-                acc_info.get('us_power', 
-                acc_info.get('power', 
-                acc_info.get('max_power_short', 0)))
-            )
-            self.account_value = float(acc_info.get('total_assets', self.available_cash))
+            
+            # Helper function to safely convert to float
+            def safe_float(value, default=0.0):
+                if value is None or value == 'N/A':
+                    return default
+                try:
+                    return float(value)
+                except:
+                    return default
+            
+            # Try different field names for cash
+            cash_value = acc_info.get('cash', acc_info.get('us_cash', 0))
+            self.available_cash = safe_float(cash_value, 0.0)
+            
+            # Try different field names for buying power
+            power_value = acc_info.get('power', 
+                         acc_info.get('us_power',
+                         acc_info.get('max_power_short', 0)))
+            self.buying_power = safe_float(power_value, self.available_cash)
+            
+            # Total assets
+            assets_value = acc_info.get('total_assets', 
+                          acc_info.get('net_assets', self.available_cash))
+            self.account_value = safe_float(assets_value, self.available_cash)
             
             logger.info(f"Account refreshed - Cash: ${self.available_cash:,.2f}, "
                        f"Buying Power: ${self.buying_power:,.2f}, "
@@ -286,7 +338,7 @@ class ProductionSPXBot:
                 last_error = e
                 logger.error(f"SPX price attempt {attempt + 1}/{max_retries} failed: {e}")
                 if attempt < max_retries - 1:
-                    time_module.sleep(2)
+                    time.sleep(2)
         
         raise RuntimeError(f"Cannot obtain valid SPX price. Last error: {last_error}")
     
@@ -317,6 +369,9 @@ class ProductionSPXBot:
     
     def check_existing_positions(self):
         """Check for existing SPXW positions"""
+        # Set the account ID on the context first
+        self.trd_ctx.acc_id = self.account_id
+        
         ret, positions = self.trd_ctx.position_list_query(
             code='',
             pl_ratio_min=None,
@@ -565,7 +620,7 @@ class ProductionSPXBot:
                     # Cancel and retry with more aggressive price
                     self.cancel_order(order_id)
                     
-            time_module.sleep(1)
+            time.sleep(1)
         
         return None, 0.0
     
@@ -599,7 +654,7 @@ class ProductionSPXBot:
                     logger.error(f"Order {order_id} terminated with status: {status}")
                     return False, 0.0
             
-            time_module.sleep(DEFAULT_FILL_CHECK_INTERVAL_S)
+            time.sleep(DEFAULT_FILL_CHECK_INTERVAL_S)
         
         logger.warning(f"Order {order_id} timed out after {timeout}s")
         return False, 0.0

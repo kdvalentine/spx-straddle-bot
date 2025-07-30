@@ -10,7 +10,7 @@ from pathlib import Path
 # Add src to path so we can import modules
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from moomoo import *
+from futu import *
 from dotenv import load_dotenv
 import logging
 
@@ -49,12 +49,24 @@ def discover_accounts():
         
         logger.info("✅ Connected to OpenD successfully\n")
         
-        # Get trading context
+        # Get trading context with SecurityFirm.FUTUINC to see all accounts
         trd_ctx = OpenSecTradeContext(
             filter_trdmarket=TrdMarket.US,
+            security_firm=SecurityFirm.FUTUINC,
             host=host,
             port=port
         )
+        
+        # Check if we have trade password in environment
+        trade_pwd = os.getenv('MOOMOO_TRADE_PWD')
+        if trade_pwd:
+            logger.info("Unlocking trade to see all accounts...")
+            ret, unlock_msg = trd_ctx.unlock_trade(trade_pwd)
+            if ret == RET_OK:
+                logger.info("✅ Trade unlocked successfully\n")
+            else:
+                logger.warning(f"⚠️  Trade unlock failed: {unlock_msg}")
+                logger.warning("Only showing accessible accounts\n")
         
         # Get account list
         ret, accounts = trd_ctx.get_acc_list()
