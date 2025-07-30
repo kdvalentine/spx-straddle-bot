@@ -16,3 +16,7 @@ python-dotenv>=1.0.0    # Load .env file
 
 # Logging (optional but recommended)
 colorlog>=6.7.0     # Colored console output
+
+# Development tools (optional)
+flake8>=7.0.0       # Code linting
+black>=24.0.0       # Code formatting

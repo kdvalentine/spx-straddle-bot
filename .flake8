@@ -1,0 +1,36 @@
+[flake8]
+# Configuration for flake8 linting
+
+# Allow longer lines for readability
+max-line-length = 120
+
+# Ignore certain warnings
+ignore = 
+    # W293: blank line contains whitespace (common in IDEs)
+    W293,
+    # F403: 'from module import *' used (needed for futu API)
+    F403,
+    # F405: name may be undefined from star imports (futu API classes)
+    F405,
+    # E402: module import not at top (needed for dotenv)
+    E402
+
+# Exclude directories
+exclude = 
+    .git,
+    __pycache__,
+    venv,
+    env,
+    .venv,
+    build,
+    dist,
+    *.egg-info,
+    .tox,
+    docs,
+    logs
+
+# Show source code for errors
+show-source = True
+
+# Count errors
+statistics = True

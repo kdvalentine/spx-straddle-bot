@@ -245,6 +245,23 @@ python src/production_strategy_complete.py
 5. **Keep OpenD updated to latest version**
 6. **Review logs regularly**
 
+## Code Quality
+
+The codebase includes a `.flake8` configuration for Python linting. To check code quality:
+
+```bash
+# Install development tools
+pip install flake8 black
+
+# Run linting
+flake8 src/ scripts/
+
+# Format code (optional)
+black src/ scripts/
+```
+
+Note: Some warnings are intentionally ignored (star imports from futu API, etc.)
+
 ## Additional Documentation
 
 - **Simple Setup Guide**: See `SIMPLE_SETUP_GUIDE.md` (for beginners!)
