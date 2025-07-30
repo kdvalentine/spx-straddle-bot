@@ -40,11 +40,14 @@ class PositionManager:
             logger.info(f"  USD Assets: ${balance_info['usd_assets']:,.2f}")
             logger.info(f"  Available Capital (Net Cash Power): ${self.initial_capital:,.2f}")
         else:
-            # Use provided capital or default
-            self.initial_capital = initial_capital if initial_capital else 100000
-            self.current_capital = self.initial_capital
-            logger.info(f"Position Manager initialized with configured capital:")
-            logger.info(f"  Initial Capital: ${self.initial_capital:,.2f}")
+            # Use provided capital or None (will be set later from account)
+            self.initial_capital = initial_capital if initial_capital else None
+            self.current_capital = self.initial_capital if self.initial_capital else 0
+            if self.initial_capital:
+                logger.info(f"Position Manager initialized with configured capital:")
+                logger.info(f"  Initial Capital: ${self.initial_capital:,.2f}")
+            else:
+                logger.info("Position Manager initialized - capital will be set from account balance")
         
         logger.info(f"  Max Risk Per Trade: {max_risk_per_trade:.1%}")
         

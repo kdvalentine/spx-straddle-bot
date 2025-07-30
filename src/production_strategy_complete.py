@@ -139,7 +139,7 @@ class ProductionSPXBot:
         self.quote_ctx: Optional[OpenQuoteContext] = None
         self.trd_ctx: Optional[OpenSecTradeContext] = None
         self.account_id: Optional[str] = None
-        self.position_manager = PositionManagerNoLimits()
+        self.position_manager = PositionManagerNoLimits()  # Will update with real balance after connect
         
         # Account info
         self.available_cash = 0.0
@@ -298,6 +298,12 @@ class ProductionSPXBot:
             logger.info(f"Account refreshed - Cash: ${self.available_cash:,.2f}, "
                        f"Buying Power: ${self.buying_power:,.2f}, "
                        f"Total Value: ${self.account_value:,.2f}")
+            
+            # Update position manager with real account balance
+            if self.position_manager and self.account_value > 0:
+                self.position_manager.initial_capital = self.account_value
+                self.position_manager.current_capital = self.account_value
+                logger.info(f"Position Manager updated with real account balance: ${self.account_value:,.2f}")
     
     # ========== Phase 1: Price & Market Validation ==========
     

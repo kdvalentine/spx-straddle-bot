@@ -46,7 +46,8 @@ class LocalConfig:
         self.telnet_timeout = int(os.getenv('TELNET_TIMEOUT', '30'))
         
         # Position sizing configuration
-        self.initial_capital = float(os.getenv('INITIAL_CAPITAL', '100000'))
+        # Note: initial_capital is deprecated - bot queries real balance from account
+        self.initial_capital = None  # Will be set from actual account balance
         self.max_risk_per_trade = float(os.getenv('MAX_RISK_PER_TRADE', '0.02'))
         
         # Additional risk management settings for production_strategy_complete
@@ -74,7 +75,7 @@ class LocalConfig:
             raise ValueError("MOOMOO_ACCOUNT_ID environment variable is required")
         
         logger.info(f"Local config loaded - TP/SL: {self.tp_sl_enabled}, Threshold: {self.tp_sl_threshold}")
-        logger.info(f"Position sizing - Capital: ${self.initial_capital:,.0f}, Max Risk: {self.max_risk_per_trade:.1%}")
+        logger.info(f"Risk settings - Max Risk Per Trade: {self.max_risk_per_trade:.1%}")
     
     def get(self, key, default=None):
         """Dictionary-style get method."""
