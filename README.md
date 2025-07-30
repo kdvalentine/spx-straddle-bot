@@ -49,7 +49,8 @@ This bot automatically trades SPX straddles (simultaneous purchase of at-the-mon
 3. **Moomoo Account Requirements**
    - Active moomoo account (paper or live)
    - API trading enabled in account settings
-   - Account ID and credentials
+   - Login credentials (account number and password)
+   - Trade password (essential for real account access)
 
 ## Installation
 
@@ -141,9 +142,12 @@ nano .env
 
 **Required settings:**
 - `MOOMOO_LOGIN_ACCOUNT`: Your moomoo account number
-- `MOOMOO_LOGIN_PWD`: Your moomoo password
+- `MOOMOO_LOGIN_PWD`: Your moomoo login password
+- `MOOMOO_TRADE_PWD`: Your moomoo trade password (required for real accounts)
 - `MOOMOO_ACCOUNT_ID`: The account ID from step 6
 - `TRADING_ENV`: Set to "PAPER" for testing, "REAL" for live trading
+
+**Important**: The trade password is essential for accessing real accounts. Without it, you'll only see paper trading accounts.
 
 ## Usage
 
@@ -213,10 +217,12 @@ python src/production_strategy_complete.py
 2. Check OpenD shows "API Ready" status
 3. Verify OPEND_HOST and OPEND_PORT in .env
 
-### "Invalid account credentials"
+### "Invalid account credentials" or "Only seeing paper accounts"
 1. Double-check account number and password
-2. Ensure API trading is enabled in moomoo app
-3. Try logging into moomoo app first
+2. Verify your trade password is correct in .env
+3. Ensure API trading is enabled in moomoo app
+4. Try logging into moomoo app first
+5. For real accounts, MOOMOO_TRADE_PWD must be set
 
 ### "Cannot obtain valid SPX price"
 1. Check internet connection
