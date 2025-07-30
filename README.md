@@ -12,6 +12,21 @@ This bot automatically trades SPX straddles (simultaneous purchase of at-the-mon
 - **Market Safety**: Trading hours validation and holiday calendar
 - **Comprehensive Logging**: Trade tracking and performance monitoring
 
+## Quick Start
+
+**Easiest way**: Run the interactive setup script:
+```bash
+./quickstart.sh
+```
+
+**Manual steps**:
+1. **Install dependencies**: `./scripts/setup_environment.sh`
+2. **Install and run OpenD**: Download from [moomoo OpenAPI](https://www.moomoo.com/download/OpenAPI)
+3. **Get your account ID**: `python scripts/get_account_info.py`
+4. **Configure**: Edit `.env` with your credentials
+5. **Test**: `python src/production_strategy_complete.py --check-only`
+6. **Run**: `python src/production_strategy_complete.py --paper`
+
 ## Prerequisites
 
 ### System Requirements
@@ -72,13 +87,15 @@ pip install -r requirements.txt
 2. Extract the downloaded file
 3. Move OpenD.app to your Applications folder
 4. Launch OpenD.app
-5. Keep it running in the background
+5. Log into your moomoo account in OpenD
+6. Keep it running in the background
 
 #### Windows:
 1. Download OpenD from https://www.moomoo.com/download/OpenAPI
 2. Extract to a folder (e.g., C:\OpenD)
 3. Run OpenD.exe
-4. Keep it running in the background
+4. Log into your moomoo account in OpenD
+5. Keep it running in the background
 
 #### Linux:
 ```bash
@@ -86,26 +103,15 @@ pip install -r requirements.txt
 ./scripts/install_opend_linux.sh
 ```
 
-### 5. Configure Environment Variables
+### 5. Create Initial Configuration
 ```bash
 # Copy the template
 cp .env.template .env
-
-# Edit .env with your credentials
-# Use your favorite editor (nano, vim, code, etc.)
-nano .env
 ```
 
-**Important .env settings:**
-- `MOOMOO_LOGIN_ACCOUNT`: Your moomoo account number
-- `MOOMOO_LOGIN_PWD`: Your moomoo password
-- `MOOMOO_ACCOUNT_ID`: Your trading account ID (paper or real)
-- `TRADING_ENV`: Set to "PAPER" for testing, "REAL" for live trading
+### 6. Get Your Moomoo Account IDs
 
-## Getting Your Moomoo Account IDs
-
-### Method 1: Automatic Discovery (Recommended)
-After installing dependencies and starting OpenD:
+Now that OpenD is running and you're logged in, discover your account IDs:
 
 ```bash
 # Make sure virtual environment is activated
@@ -119,15 +125,25 @@ This will:
 - Connect to OpenD and find all your accounts
 - Show account IDs for both paper and real accounts
 - Display current balances
-- Provide clear instructions on which ID to use
+- Tell you exactly which ID to use
 
-### Method 2: Manual (from Moomoo App)
-1. Open the moomoo desktop app
-2. Go to Account > Account Management
-3. You'll see your account numbers:
-   - Paper Trading accounts (for testing)
-   - Real Trading accounts (for live trading)
-4. Copy the appropriate account ID to your .env file
+**Alternative Method**: If the script doesn't work, you can find account IDs manually in the moomoo app under Account > Account Management.
+
+### 7. Complete Configuration
+
+Edit the .env file with your credentials and the account ID from step 6:
+
+```bash
+# Edit .env with your credentials
+# Use your favorite editor (nano, vim, code, etc.)
+nano .env
+```
+
+**Required settings:**
+- `MOOMOO_LOGIN_ACCOUNT`: Your moomoo account number
+- `MOOMOO_LOGIN_PWD`: Your moomoo password
+- `MOOMOO_ACCOUNT_ID`: The account ID from step 6
+- `TRADING_ENV`: Set to "PAPER" for testing, "REAL" for live trading
 
 ## Usage
 
