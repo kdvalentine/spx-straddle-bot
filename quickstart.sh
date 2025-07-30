@@ -49,9 +49,18 @@ echo "======================================"
 echo "Step 4: Configuration"
 echo "======================================"
 echo ""
+
+# Create .env from template if it doesn't exist
+if [ ! -f .env ]; then
+    echo "Creating .env file from template..."
+    cp .env.template .env
+    echo "✅ .env file created"
+    echo ""
+fi
+
 echo "Now you need to edit the .env file with:"
 echo "1. Your moomoo login credentials"
-echo "2. The account ID shown above"
+echo "2. The account ID shown above (copy the number displayed)"
 echo ""
 echo "Would you like to edit .env now? (y/n)"
 read -r response
