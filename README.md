@@ -14,9 +14,12 @@ This bot automatically trades SPX straddles (simultaneous purchase of at-the-mon
 
 ## Quick Start
 
+**📚 New to coding?** See the [Simple Setup Guide](SIMPLE_SETUP_GUIDE.md) for step-by-step instructions!
+
 **Easiest way**: Run the interactive setup script:
 ```bash
-./quickstart.sh
+./quickstart.sh  # Mac/Linux
+quickstart.bat   # Windows
 ```
 
 **Manual steps**:
@@ -244,6 +247,8 @@ python src/production_strategy_complete.py
 
 ## Additional Documentation
 
+- **Simple Setup Guide**: See `SIMPLE_SETUP_GUIDE.md` (for beginners!)
+- **How It Works**: See `docs/HOW_IT_WORKS.md` (visual guide)
 - **Strategy Details**: See `docs/PRODUCTION_STRATEGY_COMPLETE.md`
 - **Configuration Flow**: See `docs/CONFIGURATION_FLOW.md`
 - **Real Trading Setup**: See `docs/OPEND_REAL_TRADING.md`
