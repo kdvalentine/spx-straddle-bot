@@ -72,7 +72,7 @@ class LocalConfig:
         if not self.account_id:
             raise ValueError("MOOMOO_ACCOUNT_ID environment variable is required")
         
-        logger.info(f"Local config loaded - TP/SL: {self.tp_sl_enabled}, Threshold: {self.tp_sl_threshold}")
+        logger.info(f"Local config loaded - Trading Env: {self.trading_env}")
         logger.info(f"Risk settings - Max Risk Per Trade: {self.max_risk_per_trade:.1%}")
     
     def get(self, key, default=None):
